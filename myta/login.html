@@ -1,0 +1,140 @@
+<html lang="en">
+<head>
+    <title>Login</title>
+	<!-- Compiled and minified CSS -->
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.2/css/materialize.min.css">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+	<script src="https://www.gstatic.com/firebasejs/4.1.1/firebase.js"></script>
+	
+	<style>
+	#contain
+	{
+		margin:auto;
+		width:400px;
+		padding:20px;
+	}
+	body {
+    display: flex;
+    min-height: 100vh;
+    flex-direction: column;
+  }
+
+  main {
+    flex: 1 0 auto;
+  }
+  h4{
+	  margin:auto;
+  }
+	</style>
+</head>
+
+<body>
+
+	<nav>
+      <div class="nav-wrapper">
+        <a href="#" class="brand-logo center"><img src="logo-white.png" alt=""></a>
+      </div>
+    </nav>
+	<h4>Please Login To Continue</h4>
+	<div id="contain">
+		
+			<div class="form-group">
+				<input class="form-control" type="text" id="user" placeholder="Enter Email" >
+			</div>
+			<div class="form-group">
+				<input class="form-control" type="password" id="password" placeholder="Enter password">
+			</div>
+			<button type="submit" name="action" onclick="onLogin()" class="btn btn-success">Login</button>
+			<button type="submit" name="action" onclick="document.location.href='signup.html'" class="btn btn-success">SignUp</button>
+		
+	</div>
+	
+	<footer class="page-footer">
+          <div class="container">
+            <div class="row">
+
+            </div>
+          </div>
+          <div class="footer-copyright">
+            <div class="container">
+            
+            </div>
+          </div>
+        </footer>
+	
+	<script type="text/javascript">
+	
+	// Initialize Firebase
+	  var config = {
+		apiKey: "AIzaSyA0A3uPkZji1O5MrhCmHv9yl_xEnns7JSE",
+    authDomain: "myta-e1233.firebaseapp.com",
+    databaseURL: "https://myta-e1233.firebaseio.com",
+    projectId: "myta-e1233",
+    storageBucket: "myta-e1233.appspot.com",
+    messagingSenderId: "964731124777"
+
+	  };
+	  console.log("initialization called");
+	  firebase.initializeApp(config);
+	  
+	</script>
+	
+	<script type="text/javascript">
+		
+		var database = firebase.database();
+		var childData;
+		var reademail;
+		var readpass;
+		var flag;
+		var atpos,dotpos;
+		function onLogin(){
+		    var pass=document.getElementById("password").value;
+			var email=document.getElementById("user").value;
+			console.log("onLogin");
+			console.log(email+" "+ pass);
+			
+			atpos=email.indexOf("@");
+			dotpos = email.lastIndexOf(".");
+			if((email == "" && pass == "") || (email=="" || pass=="")){
+				console.log("empty value");
+				alert("Please fill the values in the fields");
+				document.getElementById("user").focus();
+			}else if(email!="" || pass!=""){
+				if (atpos < 1 || ( dotpos - atpos < 2 )) 
+			        {
+			           alert("Please Enter Correct Email For");
+			           document.getElementById("user").focus() ; 
+			        }
+				else{
+				var leadsRef = database.ref('users');
+				console.log("else statement");
+				leadsRef.on('value', function(snapshot) {
+				snapshot.forEach(function(childSnapshot) {
+				  childData = childSnapshot.val();
+				  reademail=childData.Email;
+				  readpass=childData.Password;
+				  //console.log(readpass);
+
+					function isInArray(reademail, day) {
+						return reademail.indexOf(day.toLowerCase()) > -1;
+					}
+					function isInArray2(readpass,pasw){
+						return readpass.indexOf(pasw)>-1;
+					}
+					console.log("Email: "+isInArray(reademail, email));
+					console.log("Password: "+isInArray2(readpass,password));
+					if(isInArray(reademail, email)== true && isInArray2(readpass,pass)== true){
+						alert("Login Successfull");
+						window.location.href = "index.html";
+						
+					}
+				});
+				});
+			}
+			}
+				
+	}
+	</script>
+</body>
+
+</html>

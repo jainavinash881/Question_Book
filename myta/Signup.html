@@ -1,0 +1,145 @@
+
+<html lang="en">
+<head>
+    <title>Sign Up</title>
+
+    <!-- Compiled and minified CSS -->
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.2/css/materialize.min.css">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+	<script src="https://www.gstatic.com/firebasejs/4.1.1/firebase.js"></script>
+	<style>
+	#contain
+	{
+		margin:auto;
+		width:400px;
+		padding:20px;
+	}
+	body {
+    display: flex;
+    min-height: 100vh;
+    flex-direction: column;
+  }
+
+  main {
+    flex: 1 0 auto;
+  }
+  
+	</style>
+</head>
+
+<body>
+
+    <nav>
+        <div class="nav-wrapper">
+          <a href="Signup.html" class="brand-logo center"> <img src="logo-white.png"  alt="logo miss"> </a>
+        </div>
+      </nav>
+	
+  <div id="contain">   
+        <div class="form-group">
+            <input class="form-control" type="text"  id="nm"  placeholder="Enter name" >
+        </div>
+        <div class="form-group">
+            <input class="form-control" type="email"  id="em" placeholder="Enter email-id" >
+        </div>
+        <div class="form-group">
+            <input class="form-control" type="password"  id="pass" placeholder="Enter password" >
+        </div>
+        <div class="form-group">
+            <input class="form-control" type="password" id="rp" placeholder="Re Enter password" >
+        </div>
+        <button type="submit" id="signup-button" class="btn btn-success" onclick="submitClick()" >Submit</button>
+        
+    </div>
+	
+	<footer class="page-footer">
+          <div class="container">
+            <div class="row">
+
+            </div>
+          </div>
+          <div class="footer-copyright">
+            <div class="container">
+          
+            </div>
+          </div>
+        </footer>
+	
+    	
+<script type="text/javascript">
+
+// Initialize Firebase
+  var config = {
+    apiKey: "AIzaSyA0A3uPkZji1O5MrhCmHv9yl_xEnns7JSE",
+    authDomain: "myta-e1233.firebaseapp.com",
+    databaseURL: "https://myta-e1233.firebaseio.com",
+    projectId: "myta-e1233",
+    storageBucket: "",
+    messagingSenderId: "964731124777"
+
+  };
+  console.log("initialization called");
+  firebase.initializeApp(config);
+</script>
+
+<script type="text/javascript">
+var submit=document.getElementById("signup-button");  
+var userId=Math.floor(Math.random() * 1000) + 1  ;
+console.log(userId);
+  // Get a reference to the database service
+var database = firebase.database();
+
+
+
+
+function submitClick(){
+	
+	var atpos,dotpos;
+	var name=document.getElementById("nm").value;
+	var email=document.getElementById("em").value;
+	var password=document.getElementById("pass").value;
+	var repassword=document.getElementById("rp").value;
+	atpos=email.indexOf("@");
+	dotpos = email.lastIndexOf(".");
+	
+	console.log(name+email+password+repassword);
+	if((name=="" && email=="" && password=="" && repassword=="") || (name=="" || email=="" || password=="" || repassword=="")){
+		alert("Please fill the form");
+	}
+	else if(name!="" && email!="" && password!="" && repassword!=""){
+		if (atpos < 1 || ( dotpos - atpos < 2 )) 
+		{
+			alert("Please Enter Correct Email For");
+			document.getElementById("em").focus() ; 
+		}
+		else if(name.length<5 || name.length>20 )
+         {
+            alert( "Name Should Have Atleast Five Characters!!" );
+            document.getElementById("nm").focus();
+            return false;
+         }
+		else{
+		if(password == repassword){
+		var firebaseRef=firebase.database().ref('users/'+userId);
+		var em=email;
+		var pass=password;
+			firebaseRef.set({
+			Name:name,
+			Email:em,
+			Password:pass
+		});	
+		alert("SignUp Successful");
+		document.location.href='login.html';
+	}
+	else{
+		alert("Passwords do not match");
+		document.getElementById("pass").focus() ;
+	}
+	}	
+	}
+	
+}
+</script>
+</body>
+
+</html>
